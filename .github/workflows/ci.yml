@@ -23,7 +23,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 11.20.0
+          version: 11.21.0
           run_install: false
 
       - name: Set up Node.js
@@ -40,3 +40,39 @@ jobs:
 
       - name: Production build
         run: pnpm build
+
+  database:
+    name: Database checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Start local Supabase
+        run: pnpm exec supabase start
+
+      - name: Lint database schema
+        run: pnpm exec supabase db lint --local --fail-on error
+
+      - name: Run database tests
+        run: pnpm exec supabase test db
+
+      - name: Stop local Supabase
+        if: always()
+        run: pnpm exec supabase stop --no-backup
