@@ -23,6 +23,8 @@ export class MockProfileIntelligenceProvider
     >[0],
     _options?: ProfileIntelligenceGenerationOptions,
   ): Promise<ProfileIntelligenceGeneration> {
+    void _options;
+
     const input =
       profileIntelligenceInputSchema.parse(rawInput);
 

@@ -88,7 +88,7 @@ export class OpenAiProfileIntelligenceProvider
       metadata: {
         provider: "openai",
         model: this.model,
-        requestId: response._request_id,
+        requestId: response._request_id ?? undefined,
       },
     };
   }
